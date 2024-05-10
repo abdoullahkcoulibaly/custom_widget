@@ -10,14 +10,19 @@
     'description': """
     Custom Widget
     """,
-    'depends': ['base'],
-    'data': [],
+    'depends': ['base', 'stock'],
+    'data': [
+        'views/stock_picking.xml'
+    ],
 
     'installable': True,
     'application': True,
     'assets': {
         'web.assets_backend': [
             'custom_widget/static/src/views/show_one2many_form.js',
+            'custom_widget/static/src/views/custom_tree_view.js',
+            'custom_widget/static/src/views/custom_tree_view.xml',
+            'custom_widget/static/src/views/list_renderer.xml',
         ],
     }
 }

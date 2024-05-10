@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+    <xpath expr="//tbody[hasclass('ui-sortable')]" position="replace">
+         <tbody class="ui-sortable">
+             <t t-if="this.isCustom">
+                 <t t-call="{{ constructor.recordRowTemplate }}">
+                <t t-set="list" t-value="props.list"/>
+            </t>
+             </t>
+             <t t-else="">
+                 <t t-call="{{ constructor.rowsTemplate }}">
+                    <t t-set="list" t-value="props.list"/>
+                </t>
+             </t>
+         </tbody>
+    </xpath>
+</t>
+
+</templates>

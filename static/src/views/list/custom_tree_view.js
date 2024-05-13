@@ -6,7 +6,7 @@ import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field"
 import { useService } from "@web/core/utils/hooks";
 
 
-import { useEffect, useState,  onMounted, onPatched, onWillPatch, onWillUpdateProps, } from "@odoo/owl";
+import { useEffect, useState,  onMounted, onPatched, onWillPatch, onWillUpdateProps, onWillStart } from "@odoo/owl";
 
 export class CustomTreeViewRenderer extends ListRenderer {
     static recordRowTemplate = "custom_widget.CustomTreeViewRenderer.RecordRow";
@@ -16,13 +16,25 @@ export class CustomTreeViewRenderer extends ListRenderer {
         this.isCustom = true;
         this.state = useState({
             columns: this.getActiveColumns(this.props.list),
-            groups: this.groupedList()
+            groups: {},
+            groupItems: this.state.columns.filter((col) => col.type === 'field'),
+            selectedItem: null
+        });
+
+        onWillStart(async () => {
+            this.state.selectedItem = this.state.groupItems[0].name;
+            this.state.groups = this.groupedList(this.groupBy);
         });
 
     }
+
+    async toggleGroupField(fieldName) {
+        this.state.selectedItem = fieldName;
+        this.state.groups = this.groupedList(this.state.selectedItem);
+    }
+
     toggleCustomGroup(group) {
         group.isFolded = !group.isFolded;
-
     }
 
     getCustomGroupLevel(group) {
@@ -30,26 +42,22 @@ export class CustomTreeViewRenderer extends ListRenderer {
     }
 
     getGroupCellColSpan(group) {
-        // Si le groupe est plié, le colspan est égal au nombre total de colonnes
+
         if (group.isFolded) {
             return this.state.columns.length;
         }
 
-        // Si le groupe est déplié et contient des enregistrements, le colspan est calculé
-        // en fonction du nombre de colonnes dans la liste
         let colspan = Object.keys(this.state.columns).length;
 
-        // Ajoute 1 pour chaque colonne facultative
         if (this.displayOptionalFields) {
             colspan += 1;
         }
 
-        // Ajoute 1 pour chaque sélecteur
         if (this.hasSelectors) {
             colspan += 1;
         }
 
-        // Ajoute 1 pour chaque action de formulaire ouverte
+
         if (this.props.onOpenFormView) {
             colspan += 1;
         }
@@ -59,19 +67,22 @@ export class CustomTreeViewRenderer extends ListRenderer {
 
 
 
+    set groupBy(item){
+        this.state.selectedItem = item;
+    }
     get groupBy(){
-        return "code";
+        return this.state.selectedItem;
     }
 
-    groupedList() {
+    groupedList(groupName) {
         const grouped = {};
         let groupId = 1;
 
         for (const record of this.props.list.records) {
             const data = record.data;
-            const group = data[this.groupBy];
+            const group = data[groupName];
 
-            if (!grouped[group]) {
+            if (grouped[group]  === undefined) {
                 grouped[group] = {
                     id: parseInt(groupId++),
                     count: 0,
@@ -91,7 +102,6 @@ export class CustomTreeViewRenderer extends ListRenderer {
 
         return grouped;
     }
-
 
 
 

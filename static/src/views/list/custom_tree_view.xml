@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-  <t t-name="custom_widget.CustomTreeViewRenderer.RecordRow">
+    <t t-name="custom_widget.CustomTreeViewRenderer.RecordRow">
          <t t-foreach="Object.entries(state.groups)" t-as="group" t-key="group[0]">
             <tr t-attf-class="{{group[1].count > 0 ? 'o_group_has_content' : ''}} o_group_header {{!group[1].isFolded ? 'o_group_open' : ''}} cursor-pointer"
                 t-on-click="() => this.toggleCustomGroup(group[1])"
             >
-                <th
-                    tabindex="-1"
+                <th tabindex="-1"
                     t-attf-class="o_group_name fs-6 fw-bold {{!group[1].isFolded ? 'text-900' : 'text-700'}}"
                     t-att-colspan="getGroupCellColSpan(group[1])">
                     <div class="d-flex align-items-center">
@@ -21,14 +20,10 @@
                     <t t-call="ListRenderer.RecordRow">
                         <t t-set="list" t-value="group[1].list"/>
                     </t>
-
                 </t>
-
             </t>
-
         </t>
-
-  </t>
+    </t>
     <t t-name="ListRenderer.RecordRow">
         <tr class="o_data_row"
             t-att-class="getRowClass(record)"
@@ -51,7 +46,7 @@
                 <t t-if="column.type === 'field'">
                     <t t-set="isInvisible"
                        t-value="evalInvisible(column.invisible, record) or !(column.name in record.data)"/>
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group[1], record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="getCellClass(column, record)"
                         t-att-name="column.name"

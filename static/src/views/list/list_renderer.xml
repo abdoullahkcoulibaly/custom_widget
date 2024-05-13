@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-inherit="web.ListRenderer" t-inherit-mode="extension">
+    <xpath expr="//t[@t-foreach='state.columns']" position="after">
+         <th class="o_list_controller o_list_actions_header">
+              <Dropdown
+                      class="'o_optional_columns_dropdown text-center border-top-0'"
+                      togglerClass="'btn p-0'"
+                      skipTogglerTabbing="true"
+                      position="'bottom-end'">
+              <t t-set-slot="toggler">
+                <i class="o_optional_columns_dropdown_toggle oi oi-fw oi-group"/>
+                </t>
+                  <t t-foreach="state.groupItems" t-as="field" t-key="field_index">
+                <DropdownItem parentClosingMode="'none'"
+                              onSelected="() => this.toggleGroupField(field.name)">
+                       <CheckBox
+                               onChange="() => this.toggleGroupField(field.name)"
+                               value="state.selectedItem === field.name"
+                               name="field.name"
+                       >
+                        <span class="d-flex align-items-center"><span class="text-truncate" t-esc="field.label"/>
+                            <span class="ps-1" t-if="env.debug"
+                                  t-esc="' (' + field.name + ')'"/></span>
+                       </CheckBox>
+
+                </DropdownItem>
+            </t>
+              </Dropdown>
+         </th>
+    </xpath>
+    <xpath expr="//tbody[hasclass('ui-sortable')]" position="replace">
+         <tbody class="ui-sortable">
+             <t t-if="this.isCustom">
+                 <t t-call="{{ constructor.recordRowTemplate }}">
+                <t t-set="list" t-value="props.list"/>
+            </t>
+             </t>
+             <t t-else="">
+                 <t t-call="{{ constructor.rowsTemplate }}">
+                    <t t-set="list" t-value="props.list"/>
+                </t>
+             </t>
+         </tbody>
+    </xpath>
+</t>
+</templates>

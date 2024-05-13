@@ -20,9 +20,9 @@
     'assets': {
         'web.assets_backend': [
             'custom_widget/static/src/views/show_one2many_form.js',
-            'custom_widget/static/src/views/custom_tree_view.js',
-            'custom_widget/static/src/views/custom_tree_view.xml',
-            'custom_widget/static/src/views/list_renderer.xml',
+            'custom_widget/static/src/views/list/custom_tree_view.js',
+            'custom_widget/static/src/views/list/custom_tree_view.xml',
+            'custom_widget/static/src/views/list/list_renderer.xml',
         ],
     }
 }
